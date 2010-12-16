@@ -15,7 +15,7 @@ import org.flexunit.asserts.assertNull;
 public class BatchLocatorTest extends TestCase {
 	protected var batchLocator:BatchLocator;
 	
-	[Embed(source="honeycutt.dbf", mimeType="application/octet-stream")]
+	[Embed(source="test.dbf", mimeType="application/octet-stream")]
 	protected var address_dbf:Class;
 	
 	[Before]
@@ -24,7 +24,7 @@ public class BatchLocatorTest extends TestCase {
             Street: "STREET_ADD",
             City: "JURISDICTI"
         };
-		batchLocator = new BatchLocator(fields, "http://208.179.133.118/ArcGIS/rest/services/LACSD_Landfill_HO/GeocodeServer");
+		batchLocator = new BatchLocator(fields, "http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_NA/GeocodeServer");
 	}
 	
 	[After]
