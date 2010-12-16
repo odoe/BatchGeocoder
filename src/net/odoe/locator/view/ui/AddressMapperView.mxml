@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 left="5"
+		 right="5"
+		 top="5"
+		 bottom="5">
+	<fx:Metadata>
+        [Event(name="addressChange",type="flash.events.Event")]
+        [Event(name="fieldCollectionChange",type="flash.events.Event")]
+    </fx:Metadata>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.utils.StringUtil;
+			
+			public static const ADDRESS_CHANGE_EVENT:String = "addressChange";
+			
+			public static const FIELDCOLLECTION_CHANGE_EVENT:String = "fieldCollectionChange";
+			
+			private var _address:Object;
+			
+			private var _fieldCollection:ArrayCollection;
+			
+			protected function bntSubmit_clickHandler(event:MouseEvent):void {
+				var aField:String;
+				var cField:String;
+				var sField:String;
+				var zField:String;
+				var cyField:String;
+				if (cboAddressField.selectedIndex >-1)
+					aField = StringUtil.trim(String(cboAddressField.selectedItem));
+				if (cboCityField.selectedIndex >-1)
+					cField = StringUtil.trim(String(cboCityField.selectedItem));
+				if (cboStateField.selectedIndex >-1)
+					sField = StringUtil.trim(String(cboStateField.selectedItem));
+				if (cboZipField.selectedIndex >-1)
+					zField = StringUtil.trim(String(cboZipField.selectedItem));
+				if (cboCountryField.selectedIndex >-1)
+					cyField = StringUtil.trim(String(cboCountryField.selectedItem));
+				
+				// You may need to modify these fields to work with your
+				// particular locator service
+				trace("aField", aField);
+				trace("cField", cField);
+				trace("sField", sField);
+				trace("zField", zField);
+				trace("cyField", cyField);
+				address = {
+						Street: aField,
+						City: cField,
+						State: sField,
+						Zip: zField,
+						Country: cyField
+					};
+			}
+			
+			[Bindable(event="addressChange")]
+			public function get address():Object {
+				return _address;
+			}
+			
+			public function set address(value:Object):void {
+				if (_address != value) {
+					_address = value;
+					dispatchEvent(new Event(ADDRESS_CHANGE_EVENT));
+				}
+			}
+			
+			[Bindable(event="fieldCollectionChange")]
+			public function get fieldCollection():ArrayCollection {
+				return _fieldCollection;
+			}
+			
+			public function set fieldCollection(value:ArrayCollection):void {
+				if (_fieldCollection != value) {
+					_fieldCollection = value;
+					dispatchEvent(new Event(FIELDCOLLECTION_CHANGE_EVENT));
+				}
+			}
+			
+			public function getAddressField():String {
+				var aField:String = StringUtil.trim(String(cboAddressField.selectedItem));
+				return aField;
+			}
+			
+			public function getCityField():String {
+				var cField:String = StringUtil.trim(String(cboCityField.selectedItem));
+				return cField;
+			}
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout gap="5"
+						  horizontalAlign="center" />
+	</s:layout>
+	<s:Group width="100%"
+			 height="100%">
+		<s:Label x="5"
+				 y="10"
+				 text="Address Field" />
+		<s:DropDownList x="100"
+						y="5"
+						id="cboAddressField"
+						dataProvider="{fieldCollection}" />
+		<s:Button x="250"
+				  y="5"
+				  label="x"
+				  fontSize="4"
+				  width="22"
+				  height="22"
+				  click="cboAddressField.selectedIndex = -1" />
+
+		<s:Label x="5"
+				 y="40"
+				 text="City Field" />
+		<s:DropDownList x="100"
+						y="35"
+						id="cboCityField"
+						dataProvider="{fieldCollection}" />
+		<s:Button x="250"
+				  y="35"
+				  label="x"
+				  fontSize="4"
+				  width="22"
+				  height="22"
+				  click="cboCityField.selectedIndex = -1" />
+
+		<s:Label x="5"
+				 y="70"
+				 text="State Field" />
+		<s:DropDownList x="100"
+						y="65"
+						id="cboStateField"
+						dataProvider="{fieldCollection}" />
+		<s:Button x="250"
+				  y="65"
+				  label="x"
+				  fontSize="4"
+				  width="22"
+				  height="22"
+				  click="cboStateField.selectedIndex = -1" />
+
+		<s:Label x="5"
+				 y="100"
+				 text="Zip Field" />
+		<s:DropDownList x="100"
+						y="95"
+						id="cboZipField"
+						dataProvider="{fieldCollection}" />
+		<s:Button x="250"
+				  y="95"
+				  label="x"
+				  fontSize="4"
+				  width="22"
+				  height="22"
+				  click="cboZipField.selectedIndex = -1" />
+
+		<s:Label x="5"
+				 y="130"
+				 text="Country Field" />
+		<s:DropDownList x="100"
+						y="125"
+						id="cboCountryField"
+						dataProvider="{fieldCollection}" />
+		<s:Button x="250"
+				  y="125"
+				  label="x"
+				  fontSize="4"
+				  width="22"
+				  height="22"
+				  click="cboCountryField.selectedIndex = -1" />
+	</s:Group>
+	<s:Button id="bntSubmit"
+			  label="Done"
+			  click="bntSubmit_clickHandler(event)" />
+
+</s:Group>

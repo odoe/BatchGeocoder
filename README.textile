@@ -1,0 +1,32 @@
+h1. BatchGeocoder: An AIR application that utilizes the "ESRI Flex API":http://help.arcgis.com/en/webapi/flex/index.html.
+
+This AIR application can upload a DBF file of addresses and send them to a desired Locator service.
+The results will add a AddressFound field of the closest matching address and a Score field for the match score from the locator to the table.
+
+As of right now, this is rough, but this is my first AIR application and I wanted to get something out there.
+Future enhancements include allowing a user to choose the Locator style so parameter fields sent to the Locator service will match what they need to match.
+For example, should the address field be called 'Address' or 'Street'.
+
+You can add map services, change the locator all you want from the code. These are all options I may add as user configurable at some point down the road.
+
+For more information about the ESRI Flex API, please visit http://help.arcgis.com/en/webapi/flex/index.html
+
+h3. Disclaimer
+Because ESRI has a download page for their Flex API where they ask that you register, I will not be providing the ESRI Flex API swc file.
+Please visit the "ESRI Flex API dowload page":http://resources.arcgis.com/content/arcgis-flex-api-how-to-download
+
+I am not employed or affiliated with ESRI beyond being a user of their products.
+
+Enjoy.
+
+h3. REQUIRED
+In addition the ESRI Flex API, to read DBF files, this application also requires the "ESRI Shapefile Reader":http://code.google.com/p/vanrijkom-flashlibs/wiki/SHP.
+For exporting to Excel, it also requires "as3xls":https://github.com/djw/as3xls.
+
+h2. License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

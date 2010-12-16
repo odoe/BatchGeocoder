@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   xmlns:esri="http://www.esri.com/2008/ags"
+					   minWidth="600"
+					   minHeight="800"
+					   title="Batch Geocoder">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.managers.PopUpManager;
+            
+            import net.odoe.locator.helpers.BatchLocator;
+            import net.odoe.locator.helpers.ExportToExcel;
+            import net.odoe.locator.helpers.IExportToExcel;
+            import net.odoe.locator.util.DbfUtil;
+            import net.odoe.locator.view.ui.AddressMapperView;
+            
+            import spark.components.TitleWindow;
+			
+			protected var addressCollection:ArrayCollection;
+			
+			protected var bLocator:BatchLocator;
+			
+			protected var dbf:ByteArray;
+			
+			protected var fileName:String;
+			
+            protected var tw:TitleWindow;
+            
+            protected var addressFields:Object;
+            
+			private function batchLocate(addresses:Array):void {
+				bLocator = new BatchLocator(addressFields, inputURL.text);
+				bLocator.addEventListener(BatchLocator.GEOCODE_COMPLETE, onGeocodeComplete);
+				bLocator.locateAddresses(addresses);
+			}
+			
+			private function btnExport_clickHandler(event:MouseEvent):void {
+				if (bLocator && bLocator.addressCollection) {
+					var export:IExportToExcel = new ExportToExcel();
+					export.collectionToExcel(bLocator.addressCollection);
+				}
+			}
+			
+			private function btnUpload_clickHandler(event:MouseEvent):void {
+				fileName = "";
+				var file:File = File.desktopDirectory.resolvePath(fileName);
+				file.addEventListener(Event.SELECT, onSelect_handler, false, 0,true);
+				var dbfFilter:FileFilter = new FileFilter("*.dbf", "*.dbf");
+				file.browse([dbfFilter]);
+			}
+			
+			private function findFieldNames(item:Object):void {
+				if (item) {
+					var f:Array = [];
+					var field:String;
+					for (field in item) {
+						f.push(field);
+					}
+					f.sort();
+                    var fm:AddressMapperView = new AddressMapperView();
+                    fm.fieldCollection = new ArrayCollection(f);
+                    fm.addEventListener(AddressMapperView.ADDRESS_CHANGE_EVENT, onAddressFieldsChange_handler, false, 0, true);
+                    tw = new TitleWindow();
+                    tw.title = "Map Address Fields";
+                    tw.addElement(fm);
+                    PopUpManager.addPopUp(tw, this, true);
+                    PopUpManager.centerPopUp(tw);
+				}
+			}
+
+            private function onAddressFieldsChange_handler(event:Event):void {
+                addressFields = AddressMapperView(event.currentTarget).address;
+                tw.removeAllElements();
+                PopUpManager.removePopUp(tw);
+                if (addressCollection) {
+                    batchLocate(addressCollection.toArray());
+                }
+            }
+			
+			private function onComplete(event:Event):void {
+				var stream:FileStream = FileStream(event.target);
+				stream.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+				stream.removeEventListener(Event.COMPLETE, onComplete);
+				stream.close();
+				var temp:Array = DbfUtil.toArray(dbf);
+				addressCollection = new ArrayCollection(temp);
+				findFieldNames(addressCollection[0]);
+			}
+			
+			private function onGeocodeComplete(event:Event):void {
+				dgAddresses.dataProvider = bLocator.addressCollection;
+				addressLayer.graphicProvider = bLocator.getGraphics();
+			}
+			
+			private function onProgress(event:ProgressEvent):void {
+				var stream:FileStream = FileStream(event.target);
+				stream.readBytes(dbf);
+			}
+			
+			private function onSelect_handler(event:Event):void {
+				dgAddresses.dataProvider = null;
+				addressLayer.graphicProvider = null;
+				var file:File = File(event.target);
+				if (dbf)
+					dbf = null;
+				
+				dbf = new ByteArray();
+				var stream:FileStream = new FileStream();
+				stream.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
+				stream.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
+				stream.openAsync(file, FileMode.READ);
+			}
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+	<s:Group top="1"
+			 left="5"
+			 right="1"
+			 minWidth="600" visible="false">
+		<s:layout>
+			<s:HorizontalLayout gap="3"
+								verticalAlign="middle" />
+		</s:layout>
+		<s:Label text="Geocode Server URL:" />
+		<s:TextInput id="inputURL"
+					 width="100%"
+					 text="http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_NA/GeocodeServer" />
+        <!--
+        esri geocoder
+        http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Address_NA/GeocodeServer
+        -->
+	</s:Group>
+	<esri:Map id="map"
+			  width="100%"
+			  height="100%">
+		<esri:ArcGISDynamicMapServiceLayer url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer" />
+		<esri:GraphicsLayer id="addressLayer" />
+	</esri:Map>
+	<s:Group width="100%">
+		<s:layout>
+			<s:HorizontalLayout gap="5"
+								verticalAlign="middle" />
+		</s:layout>
+	</s:Group>
+	<mx:DataGrid id="dgAddresses"
+				 width="100%"
+				 height="225"
+				 horizontalScrollPolicy="auto" />
+	<s:Group bottom="1"
+			 left="5"
+			 right="1"
+			 minWidth="600">
+		<s:layout>
+			<s:HorizontalLayout gap="10"
+								verticalAlign="middle" />
+		</s:layout>
+		<s:Button id="btnUpload"
+				  label="Upload DBF"
+				  click="btnUpload_clickHandler(event)" />
+		<s:Button id="btnExport"
+				  label="Export to Excel"
+				  click="btnExport_clickHandler(event)" />
+		<s:Label text="Addresses: {ArrayCollection(dgAddresses.dataProvider).length}" />
+	</s:Group>
+</s:WindowedApplication>
