@@ -1,0 +1,14 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace comp "net.odoe.locator.components.*";
+
+comp|AddressMapper
+{
+    skinClass: ClassReference("net.odoe.locator.components.skins.AddressMapperSkin");
+}
+
+comp|BatchGeocoder
+{
+    skinClass: ClassReference("net.odoe.locator.components.skins.BatchGeocoderSkin");
+}

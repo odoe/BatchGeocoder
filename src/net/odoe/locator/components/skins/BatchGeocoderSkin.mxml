@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+        [HostComponent("net.odoe.locator.components.BatchGeocoder")]
+    </fx:Metadata>
+
+	<!-- SkinParts
+	name=dgAddresses, type=mx.controls.DataGrid, required=true
+	name=btnExport, type=spark.components.Button, required=true
+	name=btnUpload, type=spark.components.Button, required=true
+	-->
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+        ]]>
+    </fx:Script>
+	<mx:DataGrid id="dgAddresses"
+				 width="100%"
+				 height="100%"
+                 editable="true"
+				 horizontalScrollPolicy="auto" />
+	<s:Group bottom="1"
+			 left="5"
+			 right="1">
+		<s:layout>
+			<s:HorizontalLayout gap="10"
+								verticalAlign="middle" />
+		</s:layout>
+		<s:Button id="btnUpload"
+				  toolTip="Upload DBF"
+                  skinClass="net.odoe.locator.components.skins.FileUploadButtonSkin"/>
+        <s:Button id="btnRemapFields"
+                  enabled="{dgAddresses.dataProvider != null}"
+                  toolTip="Remap Fields"
+                  skinClass="net.odoe.locator.components.skins.RemapFieldsButtonSkin"/>
+        <s:Button id="btnRematch"
+                  enabled="{dgAddresses.dataProvider != null}"
+                  toolTip="Rematch Addresses"
+                  skinClass="net.odoe.locator.components.skins.RematchButtonSkin"/>
+        <s:Button id="btnExport"
+                  enabled="{dgAddresses.dataProvider != null}"
+                  toolTip="Export to Excel"
+                  skinClass="net.odoe.locator.components.skins.ExportTableButtonSkin" />
+		<s:Label text="Addresses: {ArrayCollection(dgAddresses.dataProvider).length}" />
+	</s:Group>
+</s:Skin>

@@ -9,6 +9,9 @@ For example, should the address field be called 'Address' or 'Street'.
 
 You can add map services, change the locator all you want from the code. These are all options I may add as user configurable at some point down the road.
 
+Updates (2/18/2011)
+* Added ability to edit geocode results and rerun geocode service to try and get a better result.
+
 For more information about the ESRI Flex API, please visit http://help.arcgis.com/en/webapi/flex/index.html
 
 h3. Disclaimer
